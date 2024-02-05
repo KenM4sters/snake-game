@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fdf6dc01-99c7-43f6-8867-71310333d03a" name="Changes" comment="Java Snake Game init :zap:">
-      <change afterPath="$PROJECT_DIR$/src/SnakeGame.java" afterDir="false" />
+    <list default="true" id="fdf6dc01-99c7-43f6-8867-71310333d03a" name="Changes" comment="created snake - incomplete">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SnakeGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SnakeGame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +77,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1707125793866</updated>
-      <workItem from="1707125795262" duration="5444000" />
+      <workItem from="1707125795262" duration="10955000" />
     </task>
     <task id="LOCAL-00001" summary="Java Snake Game init :zap:">
       <option name="closed" value="true" />
@@ -112,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707126608568</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="created snake - incomplete">
+      <option name="closed" value="true" />
+      <created>1707131966268</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707131966268</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -120,6 +127,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Java Snake Game init :zap:" />
-    <option name="LAST_COMMIT_MESSAGE" value="Java Snake Game init :zap:" />
+    <MESSAGE value="created snake - incomplete" />
+    <option name="LAST_COMMIT_MESSAGE" value="created snake - incomplete" />
   </component>
 </project>
