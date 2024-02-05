@@ -95,7 +95,7 @@ public class SnakeGame extends JPanel implements ActionListener {
             for(final var point : snake) {
                 g.setColor(snakeColor);
                 g.fillRect(point.x, point.y, cellSize, cellSize);
-                final int newGreen = (int) Math.round(snakeColor.getGreen() * 0.90);
+                final int newGreen = (int) Math.max(0.5, Math.round(snakeColor.getGreen() * 0.90));
                 snakeColor = new Color(0, newGreen, 0);
             }
 
@@ -105,28 +105,12 @@ public class SnakeGame extends JPanel implements ActionListener {
                     highScore = currentScore;
                 }
                 printMessage(g, "Current Score:     " + currentScore +
-                        "\n\n High Score:     " + highScore +
-                        "\n\n\n Press SPACE_BAR to play again"
+                        "\n High Score:     " + highScore +
+                        "\n Press SPACE_BAR to play again"
                 );
             }
         }
     }
-
-    private void printMessage(final Graphics graphics, final String message) {
-        graphics.setColor(Color.WHITE);
-        graphics.setFont(graphics.getFont().deriveFont(30F));
-        int currentHeight = height / 3;
-        final var graphics2D = (Graphics2D) graphics;
-        final var frc = graphics2D.getFontRenderContext();
-        for (final var line : message.split("\n")) {
-            final var layout = new TextLayout(line, graphics.getFont(), frc);
-            final var bounds = layout.getBounds();
-            final var targetWidth = (float) (width - bounds.getWidth()) / 2;
-            layout.draw(graphics2D, targetWidth, currentHeight);
-            currentHeight += graphics.getFontMetrics().getHeight();
-        }
-    }
-
     private void resetGameData() {
         snake.clear();
         snake.add(new GamePoint(width / 2, height / 2));
@@ -179,6 +163,21 @@ public class SnakeGame extends JPanel implements ActionListener {
             moveSnake();
         }
         repaint();
+    }
+
+    private void printMessage(final Graphics graphics, final String message) {
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(graphics.getFont().deriveFont(30F));
+        int currentHeight = height / 3;
+        final var graphics2D = (Graphics2D) graphics;
+        final var frc = graphics2D.getFontRenderContext();
+        for (final var line : message.split("\n")) {
+            final var layout = new TextLayout(line, graphics.getFont(), frc);
+            final var bounds = layout.getBounds();
+            final var targetWidth = (float) (width - bounds.getWidth()) / 2;
+            layout.draw(graphics2D, targetWidth, currentHeight);
+            currentHeight += graphics.getFontMetrics().getHeight();
+        }
     }
 
     private record GamePoint(int x, int y) {}
