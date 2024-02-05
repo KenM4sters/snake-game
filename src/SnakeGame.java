@@ -6,18 +6,23 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextLayout;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 public class SnakeGame extends JPanel implements ActionListener {
     private final int width;
     private final int height;
     private final int cellSize;
+    private int highScore;
+    private static final Random random = new Random();
     private static final int FRAME_RATE = 20;
     private boolean gameStarted = false;
     private boolean gameOver = false;
     private Direction direction = Direction.RIGHT;
     private Direction newDirection = Direction.RIGHT;
     private final List<GamePoint> snake = new ArrayList<>();
+    private GamePoint food;
     public SnakeGame(final int width, final int height) {
         super();
         this.width = width;
@@ -49,6 +54,12 @@ public class SnakeGame extends JPanel implements ActionListener {
             if(e.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameStarted = true;
             }
+        } else if(gameOver) {
+            if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+                gameStarted = false;
+                gameOver = false;
+                resetGameData();
+            }
         } else {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
@@ -75,24 +86,44 @@ public class SnakeGame extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(!gameStarted) {
-            g.setColor(Color.WHITE);
-            g.setFont(g.getFont().deriveFont(30F));
-            int currentHeight = height / 4;
-            final var g2D = (Graphics2D) g;
-            final var frc = g2D.getFontRenderContext();
-            final String message = "press SPACE_BAR to begin game";
-            for(final var line : message.split("\n")) {
-                final var layout = new TextLayout(line, g.getFont(), frc);
-                final var bounds = layout.getBounds();
-                final var targetWidth = (float) (width - bounds.getWidth()) / 2;
-                layout.draw(g2D, targetWidth, currentHeight);
-                currentHeight += g.getFontMetrics().getHeight();
-            }
+            generateFood();
+            printMessage(g, "press SPACE_BAR to start");
         } else {
-            g.setColor(Color.GREEN);
+            g.setColor(Color.cyan);
+            g.fillRect(food.x, food.y, cellSize, cellSize);
+            Color snakeColor = Color.GREEN;
             for(final var point : snake) {
+                g.setColor(snakeColor);
                 g.fillRect(point.x, point.y, cellSize, cellSize);
+                final int newGreen = (int) Math.round(snakeColor.getGreen() * 0.90);
+                snakeColor = new Color(0, newGreen, 0);
             }
+
+            if(gameOver) {
+                final int currentScore = snake.size();
+                if(currentScore > highScore) {
+                    highScore = currentScore;
+                }
+                printMessage(g, "Current Score:     " + currentScore +
+                        "\n\n High Score:     " + highScore +
+                        "\n\n\n Press SPACE_BAR to play again"
+                );
+            }
+        }
+    }
+
+    private void printMessage(final Graphics graphics, final String message) {
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(graphics.getFont().deriveFont(30F));
+        int currentHeight = height / 3;
+        final var graphics2D = (Graphics2D) graphics;
+        final var frc = graphics2D.getFontRenderContext();
+        for (final var line : message.split("\n")) {
+            final var layout = new TextLayout(line, graphics.getFont(), frc);
+            final var bounds = layout.getBounds();
+            final var targetWidth = (float) (width - bounds.getWidth()) / 2;
+            layout.draw(graphics2D, targetWidth, currentHeight);
+            currentHeight += graphics.getFontMetrics().getHeight();
         }
     }
 
@@ -101,7 +132,12 @@ public class SnakeGame extends JPanel implements ActionListener {
         snake.add(new GamePoint(width / 2, height / 2));
     }
 
-    private void generateFood() {}
+    private void generateFood() {
+        do {
+            food = new GamePoint(random.nextInt(width / cellSize) * cellSize,
+                    random.nextInt(height / cellSize) * cellSize);
+        } while(snake.contains(food));
+    }
 
     private void moveSnake() {
         final GamePoint currentHead = snake.getFirst();
@@ -114,26 +150,32 @@ public class SnakeGame extends JPanel implements ActionListener {
 
         snake.addFirst(newHead);
 
-        if(checkCollision()) {
+        if(newHead.equals(food)) {
+            generateFood();
+        } else if(checkCollision()) {
             gameOver = true;
+            snake.removeFirst();
+        } else {
+            snake.removeLast();
         }
-
         direction = newDirection;
-        snake.removeLast();
     }
 
     private boolean checkCollision() {
-        final GamePoint head = snake.getFirst();
-        final var invalidWidth = (head.x < 0) || (head.x >= width - cellSize);
-        final var invalidHeight = (head.y < 0) || (head.y >= height - cellSize);
-        return (invalidWidth || invalidHeight);
 
+        final GamePoint head = snake.getFirst();
+        final var invalidWidth = (head.x < 0) || (head.x >= width );
+        final var invalidHeight = (head.y < 0) || (head.y >= height );
+        if(invalidWidth || invalidHeight) {
+            return true;
+        }
+
+        return snake.size() != new HashSet<>(snake).size();
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
         if(gameStarted && !gameOver) {
-            System.out.println("playing");
             moveSnake();
         }
         repaint();
